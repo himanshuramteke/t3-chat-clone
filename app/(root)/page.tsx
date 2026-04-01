@@ -1,12 +1,8 @@
 import { getCurrentUser } from "@/modules/auth/actions";
-import { UserButton } from "@clerk/nextjs";
+import ChatMessageView from "@/modules/chat/components/chat-message-view";
 
 export default async function Home() {
   await getCurrentUser();
 
-  return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <UserButton />
-    </div>
-  );
+  return <ChatMessageView />;
 }
