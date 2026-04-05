@@ -4,6 +4,9 @@ import { useState } from "react";
 import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useAiModels } from "@/modules/ai-agent/hooks/ai-agent";
+import { Spinner } from "@/components/ui/spinner";
+import { ModelSelector } from "./model-selector";
 
 interface ChatMessageFormProps {
   initialMessage?: string;
@@ -14,10 +17,10 @@ const ChatMessageForm = ({
   initialMessage,
   onMessageChange,
 }: ChatMessageFormProps) => {
+  const { data: models, isPending } = useAiModels();
+  const [selectedModel, setSelectedModel] = useState<string>("");
   const [localMessage, setLocalMessage] = useState<string>("");
 
-  // No useEffect needed — derive the displayed value directly.
-  // localMessage (user typing) takes priority over initialMessage (tab click).
   const message = localMessage || initialMessage || "";
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -62,14 +65,27 @@ const ChatMessageForm = ({
 
           <div className="flex items-center justify-between gap-2 px-3 py-2 border-t">
             <div className="flex items-center gap-1">
-              <Button variant={"outline"}>Select a Model</Button>
+              {isPending ? (
+                <>
+                  <Spinner />
+                </>
+              ) : (
+                <>
+                  <ModelSelector
+                    models={models?.models ?? []}
+                    selectedModelId={selectedModel}
+                    onModelSelect={setSelectedModel}
+                    className="ml-1"
+                  />
+                </>
+              )}
             </div>
             <Button
               type="submit"
               disabled={!message.trim()}
               size="sm"
               variant={message.trim() ? "default" : "ghost"}
-              className="h-8 w-8 p-0 rounded-full"
+              className="h-8 w-8 p-0 rounded-full "
             >
               <ArrowUp className="h-4 w-4" />
               <span className="sr-only">Send message</span>
