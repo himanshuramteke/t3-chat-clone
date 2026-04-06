@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUp } from "lucide-react";
+import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAiModels } from "@/modules/ai-agent/hooks/ai-agent";
 import { Spinner } from "@/components/ui/spinner";
 import { ModelSelector } from "./model-selector";
+import { useCreateChat } from "../hooks/chat";
+import { toast } from "sonner";
 
 interface ChatMessageFormProps {
   initialMessage?: string;
@@ -20,12 +22,12 @@ const ChatMessageForm = ({
   const { data: models, isPending } = useAiModels();
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [localMessage, setLocalMessage] = useState<string>("");
+  const { mutateAsync, isPending: isChatPending } = useCreateChat();
 
   const message = localMessage || initialMessage || "";
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setLocalMessage(e.target.value);
-    // Once the user starts editing, clear the parent's selected message
     if (initialMessage) {
       onMessageChange?.("");
     }
@@ -38,11 +40,13 @@ const ChatMessageForm = ({
   ) => {
     try {
       e.preventDefault();
-      setLocalMessage("");
-      onMessageChange?.("");
-      console.log("Message sent:", message);
+      await mutateAsync({ content: message, model: selectedModel });
+      toast.success("Message sent successfully");
     } catch (error) {
-      console.log(error);
+      console.error("Error sending message", error);
+      toast.error("Failed to send message");
+    } finally {
+      setLocalMessage("");
     }
   };
 
@@ -82,13 +86,21 @@ const ChatMessageForm = ({
             </div>
             <Button
               type="submit"
-              disabled={!message.trim()}
+              disabled={!message.trim() || isChatPending}
               size="sm"
               variant={message.trim() ? "default" : "ghost"}
               className="h-8 w-8 p-0 rounded-full "
             >
-              <ArrowUp className="h-4 w-4" />
-              <span className="sr-only">Send message</span>
+              {isChatPending ? (
+                <>
+                  <Spinner />
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" />
+                  <span className="sr-only">Send message</span>
+                </>
+              )}
             </Button>
           </div>
         </div>
