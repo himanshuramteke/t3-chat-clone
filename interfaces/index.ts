@@ -1,3 +1,5 @@
+import { Chat, Message } from "@prisma/client";
+
 export interface ModelPricing {
   prompt: string;
   completion: string;
@@ -38,4 +40,19 @@ export interface ModelSelectorProps {
   selectedModelId: string;
   onModelSelect: (id: string) => void;
   className?: string;
+}
+
+export interface CreateChatValues {
+  content: string;
+  model: string;
+}
+
+export interface ChatWithMessages extends Chat {
+  messages: Message[];
+}
+
+export interface ActionResponse {
+  success: boolean;
+  message: string;
+  data?: ChatWithMessages;
 }
