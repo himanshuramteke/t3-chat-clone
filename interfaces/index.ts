@@ -51,8 +51,24 @@ export interface ChatWithMessages extends Chat {
   messages: Message[];
 }
 
-export interface ActionResponse {
+export interface ActionResponse<T = ChatWithMessages> {
   success: boolean;
   message: string;
-  data?: ChatWithMessages;
+  data?: T;
+}
+
+export interface ChatStore {
+  activeChatId: string | null;
+  setActiveChatId: (chatId: string | null) => void;
+}
+
+export interface ChatSidebarProps {
+  chats: ChatWithMessages[];
+}
+
+export interface GroupedChats {
+  today: ChatWithMessages[];
+  yesterday: ChatWithMessages[];
+  lastWeek: ChatWithMessages[];
+  older: ChatWithMessages[];
 }
