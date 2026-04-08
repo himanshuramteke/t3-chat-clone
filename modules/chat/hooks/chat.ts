@@ -1,7 +1,12 @@
-import { CreateChatValues } from "@/interfaces";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CreateChatValues, ChatWithMessages } from "@/interfaces";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { createChatWithMessage, deleteChat } from "../actions";
+import { createChatWithMessage, deleteChat, getChatsById } from "../actions";
 import { toast } from "sonner";
 
 export const useCreateChat = () => {
@@ -42,6 +47,21 @@ export const useDeleteChat = (chatId: string) => {
     onError: (error) => {
       console.error("Delete chat error:", error);
       toast.error("Failed to delete chat");
+    },
+  });
+};
+
+export const useGetChatById = (
+  chatId: string,
+): UseQueryResult<ChatWithMessages> => {
+  return useQuery({
+    queryKey: ["chats", chatId],
+    queryFn: async () => {
+      const response = await getChatsById(chatId);
+      if (!response.success || !response.data) {
+        throw new Error(response.message);
+      }
+      return response.data;
     },
   });
 };
