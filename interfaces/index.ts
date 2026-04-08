@@ -1,4 +1,5 @@
-import { Chat, Message } from "@prisma/client";
+import { Chat, Message, MessageRole, MessageType } from "@prisma/client";
+import { UIMessage } from "ai";
 
 export interface ModelPricing {
   prompt: string;
@@ -88,4 +89,31 @@ export interface ActiveChatLoaderProps {
 
 export interface ChatIdProps {
   params: Promise<{ chatId: string }>;
+}
+
+export interface StoredMessage {
+  id: string;
+  content: string;
+  messageRole: MessageRole;
+  createdAt: Date;
+}
+
+export interface TextPart {
+  type: "text";
+  text: string;
+}
+
+export interface ChatRequestBody {
+  chatId?: string;
+  messages: UIMessage | UIMessage[];
+  model: string;
+  skipUserMessage?: boolean;
+}
+
+export interface MessageToSave {
+  chatId: string | undefined;
+  content: string;
+  messageRole: MessageRole;
+  model: string;
+  messageType: MessageType;
 }
