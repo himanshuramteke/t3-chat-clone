@@ -58,8 +58,17 @@ export interface ActionResponse<T = ChatWithMessages> {
 }
 
 export interface ChatStore {
+  chats: ChatWithMessages[];
   activeChatId: string | null;
+  messages: Message[];
+
+  setChats: (chats: ChatWithMessages[]) => void;
   setActiveChatId: (chatId: string | null) => void;
+  setMessages: (messages: Message[]) => void;
+
+  addChat: (chat: ChatWithMessages) => void;
+  addMessage: (message: Message) => void;
+  clearMessages: () => void;
 }
 
 export interface ChatSidebarProps {
@@ -71,4 +80,12 @@ export interface GroupedChats {
   yesterday: ChatWithMessages[];
   lastWeek: ChatWithMessages[];
   older: ChatWithMessages[];
+}
+
+export interface ActiveChatLoaderProps {
+  chatId: string;
+}
+
+export interface ChatIdProps {
+  params: Promise<{ chatId: string }>;
 }
