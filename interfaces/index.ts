@@ -62,6 +62,7 @@ export interface ChatStore {
   chats: ChatWithMessages[];
   activeChatId: string | null;
   messages: Message[];
+  triggeredChats: Set<string>;
 
   setChats: (chats: ChatWithMessages[]) => void;
   setActiveChatId: (chatId: string | null) => void;
@@ -70,6 +71,8 @@ export interface ChatStore {
   addChat: (chat: ChatWithMessages) => void;
   addMessage: (message: Message) => void;
   clearMessages: () => void;
+  markChatAsTriggered: (chatId: string) => void;
+  hasChatBeenTriggered: (chatId: string) => boolean;
 }
 
 export interface ChatSidebarProps {

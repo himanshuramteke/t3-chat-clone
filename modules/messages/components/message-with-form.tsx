@@ -1,7 +1,227 @@
+"use client";
+
 import { ActiveChatLoaderProps } from "@/interfaces";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { useGetChatById } from "@/modules/chat/hooks/chat";
+import { Fragment, useState, useMemo } from "react";
+
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningTrigger,
+} from "@/components/ai-elements/reasoning";
+import {
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from "@/components/ai-elements/conversation";
+import { Message, MessageContent } from "@/components/ai-elements/message";
+import {
+  PromptInput,
+  PromptInputBody,
+  PromptInputButton,
+  PromptInputSubmit,
+  PromptInputTextarea,
+  PromptInputToolbar,
+  PromptInputTools,
+} from "@/components/ai-elements/prompt-input";
+import { Response } from "@/components/ai-elements/response";
+
+import { Spinner } from "@/components/ui/spinner";
+import { ModelSelector } from "@/modules/chat/components/model-selector";
+import { useAiModels } from "@/modules/ai-agent/hooks/ai-agent";
+import { useChatStore } from "@/modules/chat/store/chat-store";
+import { RotateCcwIcon, StopCircleIcon } from "lucide-react";
+
+type MessagePart =
+  | { type: "text"; text: string }
+  | { type: "reasoning"; text: string }
+  | { type: string; text?: string };
+
+type LocalMessage = {
+  id: string;
+  role: "user" | "assistant" | "system";
+  parts: MessagePart[];
+};
 
 const MessageWithForm = ({ chatId }: ActiveChatLoaderProps) => {
-  return <div>{chatId}</div>;
+  const { data: modelsData, isPending: isModelLoading } = useAiModels();
+  const { data, isPending } = useGetChatById(chatId);
+  const { hasChatBeenTriggered, markChatAsTriggered } = useChatStore();
+
+  const [selectedModel, setSelectedModel] = useState<string>(data?.model ?? "");
+  const [input, setInput] = useState<string>("");
+
+  const initialMessages = useMemo((): LocalMessage[] => {
+    if (!data?.messages) return [];
+
+    return data.messages
+      .filter((msg) => msg.content && msg.content.trim() !== "" && msg.id)
+      .map((msg): LocalMessage => {
+        try {
+          const parts = JSON.parse(msg.content);
+          return {
+            id: msg.id,
+            role: msg.messageRole.toLowerCase() as
+              | "user"
+              | "assistant"
+              | "system",
+            parts: Array.isArray(parts)
+              ? parts
+              : [{ type: "text" as const, text: msg.content }],
+          };
+        } catch (error) {
+          return {
+            id: msg.id,
+            role: msg.messageRole.toLowerCase() as
+              | "user"
+              | "assistant"
+              | "system",
+            parts: [{ type: "text" as const, text: msg.content }],
+          };
+        }
+      });
+  }, [data]);
+
+  const { stop, messages, status, sendMessage, regenerate } = useChat({
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
+  });
+
+  if (isPending) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Spinner />
+      </div>
+    );
+  }
+
+  const handleSubmit = () => {
+    if (!input.trim()) return;
+
+    sendMessage(
+      { text: input },
+      {
+        body: {
+          model: selectedModel,
+          chatId,
+        },
+      },
+    );
+
+    setInput("");
+  };
+
+  const handleRetry = () => {
+    const allMessages = [...initialMessages, ...messages];
+    const lastAssistantMessage = [...allMessages]
+      .reverse()
+      .find((m) => m.role === "assistant");
+    if (!lastAssistantMessage) return;
+    regenerate({ messageId: lastAssistantMessage.id });
+  };
+
+  const handleStop = () => {
+    stop();
+  };
+
+  const messageToRender = [...initialMessages, ...messages];
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 relative size-full h-[calc(100vh-4rem)]">
+      <div className="flex flex-col h-full">
+        <Conversation className={"h-full"}>
+          <ConversationContent>
+            {messageToRender.length === 0 ? (
+              <div className="flex items-center justify-center h-full text-gray-500">
+                Start a conversation...
+              </div>
+            ) : (
+              messageToRender.map((message) => (
+                <Fragment key={message.id}>
+                  {message.parts.map((part: MessagePart, i: number) => {
+                    switch (part.type) {
+                      case "text":
+                        return (
+                          <Message
+                            from={message.role}
+                            key={`${message.id}-${i}`}
+                          >
+                            <MessageContent>
+                              <Response>{part.text}</Response>
+                            </MessageContent>
+                          </Message>
+                        );
+
+                      case "reasoning":
+                        return (
+                          <Reasoning
+                            className="max-w-2xl px-4 py-4 border border-muted rounded-md bg-muted/50"
+                            key={`${message.id}-${i}`}
+                          >
+                            <ReasoningTrigger />
+                            <ReasoningContent className="mt-2 italic font-light text-muted-foreground">
+                              {part.text ?? ""}
+                            </ReasoningContent>
+                          </Reasoning>
+                        );
+
+                      default:
+                        return null;
+                    }
+                  })}
+                </Fragment>
+              ))
+            )}
+            {status === "streaming" && (
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Spinner />
+                <span className="text-sm">AI is thinking...</span>
+              </div>
+            )}
+          </ConversationContent>
+          <ConversationScrollButton />
+        </Conversation>
+
+        <PromptInput onSubmit={handleSubmit} className={"mt-4"}>
+          <PromptInputBody>
+            <PromptInputTextarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type your message..."
+            />
+          </PromptInputBody>
+          <PromptInputToolbar>
+            <PromptInputTools className={"flex items-center gap-2"}>
+              {isModelLoading ? (
+                <Spinner />
+              ) : (
+                <ModelSelector
+                  models={modelsData?.models ?? []}
+                  selectedModelId={selectedModel}
+                  onModelSelect={setSelectedModel}
+                />
+              )}
+              {status === "streaming" ? (
+                <PromptInputButton onClick={handleStop}>
+                  <StopCircleIcon size={16} />
+                  <span>Stop</span>
+                </PromptInputButton>
+              ) : (
+                messageToRender.length > 0 && (
+                  <PromptInputButton onClick={handleRetry}>
+                    <RotateCcwIcon size={16} />
+                    <span>Retry</span>
+                  </PromptInputButton>
+                )
+              )}
+            </PromptInputTools>
+            <PromptInputSubmit status={status} />
+          </PromptInputToolbar>
+        </PromptInput>
+      </div>
+    </div>
+  );
 };
 
 export default MessageWithForm;
