@@ -80,9 +80,9 @@ export async function POST(req: Request): Promise<Response> {
 
     let modelMessages: ModelMessage[];
     try {
-      modelMessages = convertToModelMessages(
-        allUIMessages,
-      ) as unknown as ModelMessage[];
+      modelMessages = (await Promise.resolve(
+        convertToModelMessages(allUIMessages),
+      )) as ModelMessage[];
     } catch (conversionError) {
       modelMessages = allUIMessages
         .map((msg) => ({
