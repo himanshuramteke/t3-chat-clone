@@ -4,7 +4,7 @@ import { ActiveChatLoaderProps } from "@/interfaces";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useGetChatById } from "@/modules/chat/hooks/chat";
-import { Fragment, useState, useMemo } from "react";
+import { Fragment, useState, useMemo, useRef, useEffect } from "react";
 
 import {
   Reasoning,
@@ -33,6 +33,7 @@ import { ModelSelector } from "@/modules/chat/components/model-selector";
 import { useAiModels } from "@/modules/ai-agent/hooks/ai-agent";
 import { useChatStore } from "@/modules/chat/store/chat-store";
 import { RotateCcwIcon, StopCircleIcon } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type MessagePart =
   | { type: "text"; text: string }
@@ -50,8 +51,15 @@ const MessageWithForm = ({ chatId }: ActiveChatLoaderProps) => {
   const { data, isPending } = useGetChatById(chatId);
   const { hasChatBeenTriggered, markChatAsTriggered } = useChatStore();
 
-  const [selectedModel, setSelectedModel] = useState<string>(data?.model ?? "");
+  const [selectedModel, setSelectedModel] = useState<string>(
+    () => data?.model ?? "",
+  );
   const [input, setInput] = useState<string>("");
+
+  const hasAutoTriggered = useRef<boolean>(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const shouldAutoTrigger = searchParams.get("autoTrigger") === "true";
 
   const initialMessages = useMemo((): LocalMessage[] => {
     if (!data?.messages) return [];
@@ -87,6 +95,42 @@ const MessageWithForm = ({ chatId }: ActiveChatLoaderProps) => {
   const { stop, messages, status, sendMessage, regenerate } = useChat({
     transport: new DefaultChatTransport({ api: "/api/chat" }),
   });
+
+  useEffect(() => {
+    if (hasAutoTriggered.current) return;
+    if (!shouldAutoTrigger) return;
+    if (hasChatBeenTriggered(chatId)) return;
+    if (!selectedModel) return;
+    if (initialMessages.length === 0) return;
+
+    const lastMessage = initialMessages[initialMessages.length - 1];
+    if (lastMessage.role !== "user") return;
+
+    hasAutoTriggered.current = true;
+    markChatAsTriggered(chatId);
+
+    sendMessage(
+      { text: "" },
+      {
+        body: {
+          model: selectedModel,
+          chatId,
+          skipUserMessage: true,
+        },
+      },
+    );
+
+    router.replace(`/chat/${chatId}`, { scroll: false });
+  }, [
+    shouldAutoTrigger,
+    chatId,
+    selectedModel,
+    initialMessages,
+    markChatAsTriggered,
+    hasChatBeenTriggered,
+    sendMessage,
+    router,
+  ]);
 
   if (isPending) {
     return (
