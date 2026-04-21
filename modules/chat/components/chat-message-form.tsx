@@ -38,8 +38,13 @@ const ChatMessageForm = ({
       | React.FormEvent<HTMLFormElement>
       | React.KeyboardEvent<HTMLTextAreaElement>,
   ) => {
+    e.preventDefault();
+    if (!selectedModel) {
+      toast.error("Please select a model before sending a message");
+      return;
+    }
+
     try {
-      e.preventDefault();
       await mutateAsync({ content: message, model: selectedModel });
       toast.success("Message sent successfully");
     } catch (error) {
@@ -86,7 +91,7 @@ const ChatMessageForm = ({
             </div>
             <Button
               type="submit"
-              disabled={!message.trim() || isChatPending}
+              disabled={!message.trim() || !selectedModel || isChatPending}
               size="sm"
               variant={message.trim() ? "default" : "ghost"}
               className="h-8 w-8 p-0 rounded-full "

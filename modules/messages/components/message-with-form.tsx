@@ -46,9 +46,30 @@ type LocalMessage = {
   parts: MessagePart[];
 };
 
+type ChatData = NonNullable<ReturnType<typeof useGetChatById>["data"]>;
+
 const MessageWithForm = ({ chatId }: ActiveChatLoaderProps) => {
-  const { data: modelsData, isPending: isModelLoading } = useAiModels();
   const { data, isPending } = useGetChatById(chatId);
+
+  if (isPending) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Spinner />
+      </div>
+    );
+  }
+
+  return <MessageWithFormInner chatId={chatId} data={data as ChatData} />;
+};
+
+const MessageWithFormInner = ({
+  chatId,
+  data,
+}: {
+  chatId: string;
+  data: ChatData;
+}) => {
+  const { data: modelsData, isPending: isModelLoading } = useAiModels();
   const { hasChatBeenTriggered, markChatAsTriggered } = useChatStore();
 
   const [selectedModel, setSelectedModel] = useState<string>(
@@ -79,7 +100,7 @@ const MessageWithForm = ({ chatId }: ActiveChatLoaderProps) => {
               ? parts
               : [{ type: "text" as const, text: msg.content }],
           };
-        } catch (error) {
+        } catch {
           return {
             id: msg.id,
             role: msg.messageRole.toLowerCase() as
@@ -131,14 +152,6 @@ const MessageWithForm = ({ chatId }: ActiveChatLoaderProps) => {
     sendMessage,
     router,
   ]);
-
-  if (isPending) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <Spinner />
-      </div>
-    );
-  }
 
   const handleSubmit = () => {
     if (!input.trim()) return;
