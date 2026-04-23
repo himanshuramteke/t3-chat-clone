@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -100,20 +101,26 @@ const ChatSidebar = ({ chats }: ChatSidebarProps) => {
             <span className="truncate flex-1">{chat.title}</span>
             <DropdownMenu>
               <DropdownMenuTrigger
-                onClick={(e) => e.preventDefault()}
-                className="h-6 w-6 flex items-center justify-center rounded hover:bg-sidebar-accent-foreground/10"
+                className="h-6 w-6 inline-flex items-center justify-center rounded-md hover:bg-sidebar-accent-foreground/10"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
               >
                 <EllipsisIcon className="h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="flex flex-row gap-2 cursor-pointer"
-                  onClick={(e) => onDelete(e, chat.id)}
-                >
-                  <Trash className="h-4 w-4 text-red-500" />
-                  <span className="text-red-500">Delete</span>
-                </DropdownMenuItem>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="flex flex-row gap-2 cursor-pointer"
+                    onClick={(e) => onDelete(e, chat.id)}
+                  >
+                    <Trash className="h-4 w-4 text-red-500" />
+                    <span className="text-red-500">Delete</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
