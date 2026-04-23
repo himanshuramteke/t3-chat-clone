@@ -10,7 +10,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -78,7 +82,7 @@ export function ModelSelector({
         >
           <div className="flex items-center gap-1.5 min-w-0">
             <Sparkles className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-            <span className="truncate font-medium">
+            <span className="truncate font-semibold">
               {selectedModel?.name || "Select model"}
             </span>
           </div>

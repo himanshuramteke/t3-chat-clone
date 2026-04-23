@@ -46,6 +46,8 @@ const Modal = ({
   size,
   className = "",
 }: ModalProps) => {
+
+
   const handleSubmit = () => {
     if (onSubmit) {
       onSubmit();
@@ -60,7 +62,7 @@ const Modal = ({
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 
-        <div className="py-4">{children}</div>
+        {children && <div className="py-2">{children}</div>}
 
         {showFooter && (
           <DialogFooter>
@@ -70,7 +72,11 @@ const Modal = ({
             {onSubmit && (
               <Button
                 variant={submitVariant}
-                className="bg-primary text-primary-foreground hover:bg-primary/90"
+                className={
+                   submitVariant === "destructive"
+                    ? "bg-destructive text-destructive-foreground hover:opacity-80 transition-opacity"
+                    : "bg-primary text-primary-foreground hover:bg-primary/90"
+                }
                 onClick={handleSubmit}
               >
                 {submitText}
