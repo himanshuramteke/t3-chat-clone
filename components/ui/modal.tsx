@@ -46,8 +46,6 @@ const Modal = ({
   size,
   className = "",
 }: ModalProps) => {
-
-
   const handleSubmit = () => {
     if (onSubmit) {
       onSubmit();
@@ -66,15 +64,29 @@ const Modal = ({
 
         {showFooter && (
           <DialogFooter>
-            <Button variant="outline" onClick={onClose}>
+            <Button
+              variant="outline"
+              onClick={onClose}
+              className="hover:cursor-pointer"
+            >
               {cancelText}
             </Button>
             {onSubmit && (
               <Button
                 variant={submitVariant}
                 className={
-                   submitVariant === "destructive"
-                    ? "bg-destructive text-destructive-foreground hover:opacity-80 transition-opacity"
+                  submitVariant === "destructive"
+                    ? `
+        bg-destructive text-destructive-foreground
+
+        hover:bg-destructive/92   /* light mode → stay red */
+
+        dark:hover:bg-transparent 
+        dark:hover:text-foreground 
+        dark:hover:border 
+        dark:hover:border-input
+        hover:cursor-pointer
+      `
                     : "bg-primary text-primary-foreground hover:bg-primary/90"
                 }
                 onClick={handleSubmit}
