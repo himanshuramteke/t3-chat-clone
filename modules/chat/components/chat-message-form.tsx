@@ -58,7 +58,7 @@ const ChatMessageForm = ({
   return (
     <div className="w-full max-w-3xl mx-auto px-4 pb-6">
       <form onSubmit={(e) => handleSubmit(e)}>
-        <div className="relative rounded-2xl border-border shadow-sm transition-all">
+        <div className="relative rounded-2xl border shadow-sm transition-all">
           <Textarea
             value={message}
             onChange={handleChange}
@@ -72,7 +72,7 @@ const ChatMessageForm = ({
             }}
           />
 
-          <div className="flex items-center justify-between gap-2 px-3 py-2 border-t">
+          <div className="flex items-center justify-between gap-2 px-2 py-2 border-t">
             <div className="flex items-center gap-1">
               {isPending ? (
                 <>
@@ -102,7 +102,7 @@ const ChatMessageForm = ({
                 </>
               ) : (
                 <>
-                  <Send className="h-4 w-4" />
+                  <Send className="size-5" />
                   <span className="sr-only">Send message</span>
                 </>
               )}
