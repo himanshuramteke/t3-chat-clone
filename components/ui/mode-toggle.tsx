@@ -13,6 +13,7 @@ export function ModeToggle() {
       variant="ghost"
       size="icon"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      className="hover:cursor-pointer"
     >
       {theme === "light" ? (
         <Sunset className="size-5" />
