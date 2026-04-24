@@ -84,7 +84,7 @@ const ChatMessageForm = ({
                     models={models?.models ?? []}
                     selectedModelId={selectedModel}
                     onModelSelect={setSelectedModel}
-                    className="ml-1"
+                    className="ml-1 hover:cursor-pointer"
                   />
                 </>
               )}
@@ -94,7 +94,7 @@ const ChatMessageForm = ({
               disabled={!message.trim() || !selectedModel || isChatPending}
               size="sm"
               variant={message.trim() ? "default" : "ghost"}
-              className="h-8 w-8 p-0 rounded-full "
+              className="h-8 w-8 p-0 rounded-full hover:cursor-pointer"
             >
               {isChatPending ? (
                 <>
@@ -102,7 +102,7 @@ const ChatMessageForm = ({
                 </>
               ) : (
                 <>
-                  <Send className="size-5" />
+                  <Send className="size-5 " />
                   <span className="sr-only">Send message</span>
                 </>
               )}

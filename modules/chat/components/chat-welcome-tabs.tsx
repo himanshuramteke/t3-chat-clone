@@ -84,7 +84,7 @@ const ChatWelcomeTabs = ({
               key={tab.tabName}
               variant={activeTab === index ? "default" : "secondary"}
               onClick={() => setActiveTab(index)}
-              className="w-27.5 justify-start"
+              className="w-27.5 justify-start hover:cursor-pointer"
             >
               {tab.icon}
               <span className="ml-2">{tab.tabName}</span>
@@ -97,7 +97,7 @@ const ChatWelcomeTabs = ({
             <div key={index}>
               <button
                 onClick={() => onMessageSelect(message)}
-                className="w-full text-left text-sm text-muted-foreground hover:text-primary transition-colors duration-300 ease-in-out py-2"
+                className="w-full text-left text-sm text-muted-foreground hover:text-primary transition-colors duration-300 ease-in-out py-2 hover:cursor-pointer"
               >
                 {message}
               </button>

@@ -144,7 +144,7 @@ const ChatSidebar = ({ chats }: ChatSidebarProps) => {
 
       <div className="p-4">
         <Link href={"/"}>
-          <Button className={"w-full"}>
+          <Button className={"w-full hover:cursor-pointer"}>
             <PlusIcon className="mr-2 h-4 w-4" />
             New Chat
           </Button>
