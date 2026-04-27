@@ -23,8 +23,9 @@ import {
   PromptInputButton,
   PromptInputSubmit,
   PromptInputTextarea,
-  PromptInputToolbar,
   PromptInputTools,
+  PromptInputFooter,
+  type PromptInputMessage,
 } from "@/components/ai-elements/prompt-input";
 import { Response } from "@/components/ai-elements/response";
 
@@ -153,11 +154,11 @@ const MessageWithFormInner = ({
     router,
   ]);
 
-  const handleSubmit = () => {
-    if (!input.trim()) return;
+  const handleSubmit = (message: PromptInputMessage) => {
+    if (!message.text?.trim()) return;
 
     sendMessage(
-      { text: input },
+      { text: message.text },
       {
         body: {
           model: selectedModel,
@@ -171,13 +172,28 @@ const MessageWithFormInner = ({
 
   const handleRetry = () => {
     const allMessages = [...initialMessages, ...messages];
-    const lastAssistantMessage = [...allMessages]
+    const lastUserMessage = [...allMessages]
       .reverse()
-      .find((m) => m.role === "assistant");
-    if (!lastAssistantMessage) return;
-    regenerate({ messageId: lastAssistantMessage.id });
-  };
+      .find((m) => m.role === "user");
+    if (!lastUserMessage) return;
 
+    const lastUserText = lastUserMessage.parts
+      .filter((p: MessagePart) => p.type === "text")
+      .map((p: MessagePart) => p.text ?? "")
+      .join("");
+
+    if (!lastUserText.trim()) return;
+
+    sendMessage(
+      { text: lastUserText },
+      {
+        body: {
+          model: selectedModel,
+          chatId,
+        },
+      },
+    );
+  };
   const handleStop = () => {
     stop();
   };
@@ -248,7 +264,7 @@ const MessageWithFormInner = ({
               placeholder="Type your message..."
             />
           </PromptInputBody>
-          <PromptInputToolbar>
+          <PromptInputFooter>
             <PromptInputTools className={"flex items-center gap-2"}>
               {isModelLoading ? (
                 <Spinner />
@@ -257,6 +273,7 @@ const MessageWithFormInner = ({
                   models={modelsData?.models ?? []}
                   selectedModelId={selectedModel}
                   onModelSelect={setSelectedModel}
+                  className="hover:cursor-pointer"
                 />
               )}
               {status === "streaming" ? (
@@ -266,15 +283,21 @@ const MessageWithFormInner = ({
                 </PromptInputButton>
               ) : (
                 messageToRender.length > 0 && (
-                  <PromptInputButton onClick={handleRetry}>
+                  <PromptInputButton
+                    className="hover:cursor-pointer px-2 py-3"
+                    onClick={handleRetry}
+                  >
                     <RotateCcwIcon size={16} />
                     <span>Retry</span>
                   </PromptInputButton>
                 )
               )}
             </PromptInputTools>
-            <PromptInputSubmit status={status} />
-          </PromptInputToolbar>
+            <PromptInputSubmit
+              className="hover:cursor-pointer"
+              status={status}
+            />
+          </PromptInputFooter>
         </PromptInput>
       </div>
     </div>
