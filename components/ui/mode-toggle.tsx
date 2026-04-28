@@ -1,6 +1,6 @@
 "use client";
 
-import { Sunrise, Sunset } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "./button";
@@ -16,9 +16,9 @@ export function ModeToggle() {
       className="hover:cursor-pointer"
     >
       {theme === "light" ? (
-        <Sunset className="size-5" />
+        <Moon className="size-5" />
       ) : (
-        <Sunrise className="size-5" />
+        <Sun className="size-5" />
       )}
     </Button>
   );
