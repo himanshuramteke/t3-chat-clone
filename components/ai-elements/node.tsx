@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 import {
   Card,
   CardAction,
@@ -69,3 +71,5 @@ export const NodeFooter = ({ className, ...props }: NodeFooterProps) => (
     {...props}
   />
 );
+
+

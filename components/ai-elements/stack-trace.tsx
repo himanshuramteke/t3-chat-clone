@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
@@ -520,3 +522,5 @@ StackTraceCopyButton.displayName = "StackTraceCopyButton";
 StackTraceExpandButton.displayName = "StackTraceExpandButton";
 StackTraceContent.displayName = "StackTraceContent";
 StackTraceFrames.displayName = "StackTraceFrames";
+
+

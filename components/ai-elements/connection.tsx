@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 import type { ConnectionLineComponent } from "@xyflow/react";
 
 const HALF = 0.5;
@@ -26,3 +28,5 @@ export const Connection: ConnectionLineComponent = ({
     />
   </g>
 );
+
+

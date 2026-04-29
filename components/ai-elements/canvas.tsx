@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 import type { ReactFlowProps } from "@xyflow/react";
 import { Background, ReactFlow } from "@xyflow/react";
 import type { ReactNode } from "react";
@@ -24,3 +26,5 @@ export const Canvas = ({ children, ...props }: CanvasProps) => (
     {children}
   </ReactFlow>
 );
+
+

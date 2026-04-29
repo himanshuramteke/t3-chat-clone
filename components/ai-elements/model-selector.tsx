@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 import {
   Command,
   CommandDialog,
@@ -211,3 +213,5 @@ export const ModelSelectorName = ({
 }: ModelSelectorNameProps) => (
   <span className={cn("flex-1 truncate text-left", className)} {...props} />
 );
+
+

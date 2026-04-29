@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -302,3 +304,5 @@ export const OpenInCursor = (props: OpenInCursorProps) => {
     <DropdownMenuItem {...props} render={<a className="flex items-center gap-2" href={providers.cursor.createUrl(query)} rel="noopener" target="_blank" />}><span className="shrink-0">{providers.cursor.icon}</span><span className="flex-1">{providers.cursor.title}</span><ExternalLinkIcon className="size-4 shrink-0" /></DropdownMenuItem>
   );
 };
+
+

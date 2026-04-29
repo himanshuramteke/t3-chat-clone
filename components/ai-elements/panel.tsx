@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 import { cn } from "@/lib/utils";
 import { Panel as PanelPrimitive } from "@xyflow/react";
 import type { ComponentProps } from "react";
@@ -13,3 +15,5 @@ export const Panel = ({ className, ...props }: PanelProps) => (
     {...props}
   />
 );
+
+

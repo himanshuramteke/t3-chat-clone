@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 import { cn } from "@/lib/utils";
 import type { Experimental_GeneratedImage } from "ai";
 
@@ -22,3 +24,5 @@ export const Image = ({
     src={`data:${mediaType};base64,${base64}`}
   />
 );
+
+

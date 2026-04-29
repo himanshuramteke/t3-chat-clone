@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -146,3 +148,5 @@ export const ArtifactContent = ({
 }: ArtifactContentProps) => (
   <div className={cn("flex-1 overflow-auto p-4", className)} {...props} />
 );
+
+

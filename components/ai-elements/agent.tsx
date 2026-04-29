@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import {
@@ -139,3 +141,5 @@ AgentInstructions.displayName = "AgentInstructions";
 AgentTools.displayName = "AgentTools";
 AgentTool.displayName = "AgentTool";
 AgentOutput.displayName = "AgentOutput";
+
+

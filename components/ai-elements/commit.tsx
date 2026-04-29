@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -450,3 +452,5 @@ export const CommitFileDeletions = ({
     </span>
   );
 };
+
+

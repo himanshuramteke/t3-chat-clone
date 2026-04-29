@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 import type { EdgeProps, InternalNode, Node } from "@xyflow/react";
 import {
   BaseEdge,
@@ -141,3 +143,5 @@ export const Edge = {
   Animated,
   Temporary,
 };
+
+

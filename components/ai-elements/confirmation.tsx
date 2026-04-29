@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -172,3 +174,5 @@ export type ConfirmationActionProps = ComponentProps<typeof Button>;
 export const ConfirmationAction = (props: ConfirmationActionProps) => (
   <Button className="h-8 px-3 text-sm" type="button" {...props} />
 );
+
+

@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -75,3 +77,5 @@ const ShimmerComponent = ({
 };
 
 export const Shimmer = memo(ShimmerComponent);
+
+

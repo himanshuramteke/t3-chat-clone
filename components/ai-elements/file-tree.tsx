@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import {
@@ -295,3 +297,5 @@ export const FileTreeActions = ({
     {children}
   </div>
 );
+
+

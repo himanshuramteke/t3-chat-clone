@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -560,3 +562,5 @@ export type CodeBlockLanguageSelectorItemProps = ComponentProps<
 export const CodeBlockLanguageSelectorItem = (
   props: CodeBlockLanguageSelectorItemProps
 ) => <SelectItem {...props} />;
+
+

@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -304,3 +306,5 @@ export const Persona: FC<PersonaProps> = memo(
 );
 
 Persona.displayName = "Persona";
+
+

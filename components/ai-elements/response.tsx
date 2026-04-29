@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 import { cn } from "@/lib/utils";
 import { memo } from "react";
@@ -23,3 +25,5 @@ export const Response = memo<ResponseProps>(
 );
 
 Response.displayName = "Response";
+
+

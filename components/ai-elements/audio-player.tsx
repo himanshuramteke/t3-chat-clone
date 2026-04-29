@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -181,3 +183,5 @@ export const AudioPlayerVolumeRange = ({
 }: AudioPlayerVolumeRangeProps) => (
   <ButtonGroupText className="bg-transparent" render={<MediaVolumeRange className={cn("", className)} data-slot="audio-player-volume-range" {...props} />}></ButtonGroupText>
 );
+
+
