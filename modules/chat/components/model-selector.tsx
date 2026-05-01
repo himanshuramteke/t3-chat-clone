@@ -85,8 +85,8 @@ export function ModelSelector({
             <span className="truncate font-semibold">
               {selectedModel?.name || "Select model"}
             </span>
+            <ChevronDown className="h-3.5 w-3.5 shrink-0 opacity-50" />
           </div>
-          <ChevronDown className="h-3.5 w-3.5 shrink-0 opacity-50" />
         </PopoverTrigger>
 
         <PopoverContent className={"w-3xl p-0"} align="start">
